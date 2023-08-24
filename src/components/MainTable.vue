@@ -30,7 +30,7 @@
                 <td scope="row">
                     1
                     <PopupMenu
-                      :selectedItemPopupMenu = 'selectedItemPopupMenu'
+                      :openWindow  = 'openWindow'
                     />
                 </td>
                 <td>
@@ -86,24 +86,44 @@
             </tbody>
           </table>
 
-    <ModalWindow />
+    <ModalWindow
+      ref="ModalWindow"
+    >
+      <component :is="currentContentWindow"></component>
+    </ModalWindow>
 
 </template>
 
 <script>
+import { markRaw } from 'vue'
+
 import PopupMenu from '@/components/PopupMenu.vue'
 import ModalWindow from '@/components/ModalWindow.vue'
+import FormOrganization from '../components//blocks/FormOrganization.vue'
 
 export default {
-
+  name: 'MainTable',
   components: {
     PopupMenu,
     ModalWindow
+    // FormOrganization
+
   },
+
+  data: () => ({
+    currentContentWindow: null,
+    FormOrganization: markRaw(FormOrganization)
+  }),
 
   methods: {
     selectedItemPopupMenu  () {
       console.log('test')
+    },
+
+    openWindow () {
+      // console.log(selectedPopupItem);
+      // this.currentContentWindow = selectedPopupItem.module
+      this.currentContentWindow = FormOrganization
     }
   }
 }

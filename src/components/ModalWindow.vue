@@ -13,7 +13,9 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
             </div>
             <div class="modal-body">
-              ...
+
+              <slot></slot>
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -26,6 +28,7 @@
 
 <script>
 export default {
+  name: 'ModalWindow'
 
 }
 </script>

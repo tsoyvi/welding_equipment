@@ -5,34 +5,35 @@
     <font-awesome-icon icon="bars" />
   </button>
   <ul class="dropdown-menu">
-    <li>
-      <div class="dropdown-item button_test"
+    <li v-for="(item, index) in POPUP_MENU_ITEMS" :key="index">
+      <div v-if="item.title != '-'"
+        class="dropdown-item button_test"
         data-bs-toggle="modal"
         data-bs-target="#modalWindow"
-        @click="selectedItemPopupMenu()"
-        >Организация
+        @click="openWindow()"
+        >{{item.title}}
       </div>
+      <div v-else><li><hr class="dropdown-divider"></li></div>
     </li>
-    <li>
-        <div class="dropdown-item button_test"
-            data-bs-toggle="modal"
-            data-bs-target="#modalWindow"
-            @click="test()"
-        >Перечень СО
-        </div>
-    </li>
-    <li><a class="dropdown-item" href="#">Что-то еще здесь</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="#">Отделенная ссылка</a></li>
+
   </ul>
 </div>
 </template>
 
 <script>
 // import PopupMenu from '@/components/PopupMenu.vue'
+import { mapGetters } from 'vuex'
 
 export default {
-  props: ['selectedItemPopupMenu'],
+  props: ['openWindow'],
+  data: function () {
+    return {
+    }
+  },
+
+  computed: {
+    ...mapGetters(['POPUP_MENU_ITEMS'])
+  },
   methods: {
     /* test () {
       this.selectedItemPopupMenu('test')
