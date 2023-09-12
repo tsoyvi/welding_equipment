@@ -14,9 +14,10 @@
             <tr>
                 <td>
                     <div class="form-floating">
-                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                        <label for="floatingTextarea2">ОТУ</label>
+                      <SelectOtu />
+
                     </div>
+
                 </td>
                 <td>
                     <div class="form-floating">
@@ -54,7 +55,19 @@
                             <div
                                 class="form-check"
                             >
-                                <input class="form-check-input" type="checkbox" :value="method.name" :id="method.name">
+                                <input class="form-check-input" type="checkbox" :value="method.name" :title="method.title" :id="method.name">
+                                <label class="form-check-label" :for="method.name">
+                                    {{method.name}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" v-for="(method, index) in methodsControl.RK" :key="index">
+                            <div
+                                class="form-check"
+                            >
+                                <input class="form-check-input" type="checkbox" :value="method.name" :title="method.title" :id="method.name">
                                 <label class="form-check-label" :for="method.name">
                                     {{method.name}}
                                 </label>
@@ -64,14 +77,51 @@
                 </td>
             </tr>
         </tbody>
-
     </table>
+
+    <table class="table table-bordered border-primary table-striped table-sm">
+      <tbody>
+      <tr>
+        <td scope="col">Нормативные документы на сварку:</td>
+      </tr>
+      <tr>
+        <td scope="col">КО(1): РД 153-34.1-003.01; РД 2730.940.102-92; СТО ЦКТИ 10.002-2007</td>
+      </tr>
+      <tr>
+        <td scope="col">Для копирования:</td>
+      </tr>
+      <tr>
+        <td scope="col">РД 153-34.1-003.01; РД 2730.940.102-92; СТО ЦКТИ 10.002-2007.</td>
+      </tr>
+      <tr>
+        <td scope="col">Нормативные документы на контроль:</td>
+      </tr>
+      <tr>
+        <td scope="col">Общие: ГОСТ 16037-80. КО(1): РД 153-34.1-003.01; РД 2730.940.103-92</td>
+      </tr>
+      <tr>
+        <td scope="col">Для копирования:</td>
+      </tr>
+      <tr>
+        <td scope="col">РД 153-34.1-003.01; РД 2730.940.102-92; СТО ЦКТИ 10.002-2007.</td>
+      </tr>
+      </tbody>
+    </table>
+
+    V3
+
 </div>
 </template>
 
 <script>
+
+import SelectOtu from '@/components/blocks/SelectOtu.vue'
+
 export default {
   name: 'PickUpDocs',
+  components: {
+    SelectOtu
+  },
 
   data () {
     return {
@@ -79,41 +129,55 @@ export default {
         NK: [
           {
             id: 0,
-            name: 'ВИК'
+            name: 'ВИК',
+            title: 'Визуальный и измерительный контроль'
           },
           {
             id: 1,
-            name: 'РК'
+            name: 'РК',
+            title: 'Радиографический контроль'
           },
           {
             id: 2,
-            name: 'УК'
+            name: 'УК',
+            title: 'ультразвуковой контроль'
           },
           {
             id: 3,
-            name: 'ПВК'
+            name: 'ПВК',
+            title: 'Капиллярный контроль'
           },
           {
             id: 4,
-            name: 'МК'
+            name: 'МК',
+            title: 'Магнитно порошковый контроль'
           }
         ],
         RK: [
           {
             id: 0,
-            name: 'Растяжение'
+            name: 'Растяжение',
+            title: 'Временное сопротивление на разрыв'
           },
           {
             id: 1,
-            name: 'Изгиб'
+            name: 'Изгиб',
+            title: 'Статический изгиб'
           },
           {
             id: 2,
-            name: 'Сплющивание'
+            name: 'Сплющивание',
+            title: 'Сплющивание'
           },
           {
             id: 3,
-            name: 'Сдвиг'
+            name: 'Сдвиг',
+            title: 'Испытание на сдвиг'
+          },
+          {
+            id: 4,
+            name: 'Металлография',
+            title: 'Металлографические исследования'
           }
         ]
       }
@@ -124,4 +188,8 @@ export default {
 </script>
 
 <style>
+body {
+  background-color: #FFF7F7;
+}
+
 </style>
