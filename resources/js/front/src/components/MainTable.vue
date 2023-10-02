@@ -97,9 +97,9 @@
 <script>
 import { markRaw } from 'vue'
 
-import PopupMenu from '@/components/PopupMenu.vue'
-import ModalWindow from '@/components/ModalWindow.vue'
-import FormOrganization from '../components//blocks/FormOrganization.vue'
+import PopupMenu from '../components/PopupMenu.vue'
+import ModalWindow from '../components/ModalWindow.vue'
+import FormOrganization from '../components/blocks/FormOrganization.vue'
 
 export default {
   name: 'MainTable',

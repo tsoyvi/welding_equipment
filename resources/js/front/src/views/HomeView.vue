@@ -8,7 +8,7 @@
 <script>
 // @ is an alias to /src
 
-import MainTable from '@/components/MainTable.vue'
+import MainTable from '../components/MainTable.vue'
 
 export default {
   name: 'HomeView',

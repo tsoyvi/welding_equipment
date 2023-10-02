@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 
 import popupMenu from './popupMenu'
 import otuSelect from './otu_select'
+import ntdList from './ntd_list'
 
 export default createStore({
   state: {
@@ -14,6 +15,7 @@ export default createStore({
   },
   modules: {
     popupMenu,
-    otuSelect
+    otuSelect,
+    ntdList
   }
 })

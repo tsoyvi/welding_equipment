@@ -1,0 +1,40 @@
+<textarea id="stringOTU" ref="stringOTU" class="form-control form-control-sm" @click="showSelector()" rows="5"
+    :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" readonly></textarea>
+
+<div id="divOTUSelector" ref="divOTUSelector" class="bg-light border border-success p-2 border-opacity-10 rounded-1"
+    v-show="isShowSelector">
+
+    <div v-for="(otuItem, otuIndex) in otuItems" :key="otuIndex">
+        <label :for="'surName' + otuIndex" class="form-check-label">
+            <input type="checkbox" :value="otuItem.name" :id="'surName' + otuIndex" class="form-check-input remove-halo"
+                @change="otuToString()" v-model="enableOtu[otuIndex]">
+            {{ otuItem.name + ' - ' + otuItem.header }}
+        </label>
+
+        <transition name="listotu-fade">
+            <div class="bg-light-subtle" v-show="enableOtu[otuIndex]">
+
+                <label :for="otuItem.name + item.index" v-for="(item, index) in otuItem.list" :key="index"
+                    class="form-check-label ms-2">
+                    <input type="checkbox" :value="item.index" :id="otuItem.name + item.index"
+                        v-model="selectedOtu[otuIndex]" @change="otuToString()" :title="item.description"
+                        class="form-check-input remove-halo">
+                    {{ otuItem.name }}({{ item.index }})
+                </label>
+
+            </div>
+        </transition>
+
+    </div>
+
+    <label for="select-OTU">
+        <input type="checkbox" id="STO_GAZ" onClick="select_OTU();">
+        С учетом ПАО "Газпром"
+    </label>
+
+    <div class="OTU-button-close" @click="close()" @keydown="bar">
+        <i class="fa fa-window-close" aria-hidden="true"></i>
+    </div>
+
+    <div class="div-OTU-shadow" @click="close()" @keydown="bar"></div>
+</div>

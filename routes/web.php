@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/*
 Route::get('/', function () {
     return view('welcome');
 });
+*/
+
+
+// Здесь перенаправляем на страницу подгрузки приложения на vue
+Route::get('{any}', function () {
+    return view('app');
+})->where('any', '.*');

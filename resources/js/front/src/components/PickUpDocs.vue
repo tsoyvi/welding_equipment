@@ -14,7 +14,9 @@
             <tr>
                 <td>
                     <div class="form-floating">
-                      <SelectOtu />
+                      <SelectOtu
+                        v-model="otuString"
+                      />
 
                     </div>
 
@@ -108,14 +110,17 @@
       </tbody>
     </table>
 
-    V3
+<input v-model="otuString">
 
+    V3
+{{NTD_LIST}}
 </div>
 </template>
 
 <script>
 
-import SelectOtu from '@/components/blocks/SelectOtu.vue'
+import SelectOtu from './blocks/SelectOtu.vue'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'PickUpDocs',
@@ -180,9 +185,24 @@ export default {
             title: 'Металлографические исследования'
           }
         ]
-      }
+
+      },
+
+      otuString: ''
     }
+  },
+  computed: {
+    ...mapGetters(['NTD_LIST'])
+
+  },
+  methods: {
+    ...mapActions(['getNtdList'])
+  },
+
+  mounted () {
+    this.getNtdList()
   }
+
 }
 
 </script>
