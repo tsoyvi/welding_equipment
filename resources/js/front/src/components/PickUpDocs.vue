@@ -23,33 +23,26 @@
                 </td>
                 <td>
                     <div class="form-floating">
-                        <select class="form-select form-select-sm" id="floatingSelect">
-                            <option value="1">РД</option>
-                            <option value="2">МП</option>
-                            <option value="3">РАД</option>
+                        <select class="form-select form-select-sm" id="floatingSelect"
+                          v-model="selectedWeldingMethod"
+                        >
+                          <option
+                            v-for="method in weldingMethodList"
+                            v-bind:value="method" :key="method"
+                          >{{method}}
+                          </option>
                         </select>
                         <label for="floatingSelect">Способ сварки</label>
                     </div>
                 </td>
                 <td>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Т" id="T">
-                        <label class="form-check-label" for="T">
-                            Труба
+                    <div class="form-check" v-for="(detail, index) in detailsTypeList" :key="index">
+                        <input class="form-check-input" type="checkbox" :value="index" :id="index" v-model="selectedDetailsType">
+                        <label class="form-check-label" :for="index">
+                        {{index}} ({{detail}})
                         </label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Л" id="L">
-                        <label class="form-check-label" for="L">
-                            Лист
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="С" id="C">
-                        <label class="form-check-label" for="C">
-                            Стержень
-                        </label>
-                    </div>
+
                 </td>
                 <td>
                     <div class="row">
@@ -57,7 +50,12 @@
                             <div
                                 class="form-check"
                             >
-                                <input class="form-check-input" type="checkbox" :value="method.name" :title="method.title" :id="method.name">
+                                <input class="form-check-input" type="checkbox"
+                                :value="method.name"
+                                :title="method.title"
+                                :id="method.name"
+                                v-model="selectedMethodControl"
+                                >
                                 <label class="form-check-label" :for="method.name">
                                     {{method.name}}
                                 </label>
@@ -69,7 +67,12 @@
                             <div
                                 class="form-check"
                             >
-                                <input class="form-check-input" type="checkbox" :value="method.name" :title="method.title" :id="method.name">
+                                <input class="form-check-input" type="checkbox"
+                                  :value="method.name"
+                                  :title="method.title"
+                                  :id="method.name"
+                                  v-model="selectedMethodControl"
+                                >
                                 <label class="form-check-label" :for="method.name">
                                     {{method.name}}
                                 </label>
@@ -87,33 +90,86 @@
         <td scope="col">Нормативные документы на сварку:</td>
       </tr>
       <tr>
-        <td scope="col">КО(1): РД 153-34.1-003.01; РД 2730.940.102-92; СТО ЦКТИ 10.002-2007</td>
+        <td scope="col">
+          <span v-for="(NTDList, key, index) in foundNTDWeldingObj" :key="key">
+            <span v-if="index !== 0"><br></span>
+            <b>{{ key }}: </b>
+            <span v-for="(NTDItem, NTDindex) in NTDList" :key="NTDindex">
+              <span v-if="NTDindex !== 0">, </span>
+              <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
+            </span>
+
+          </span>
+
+        </td>
       </tr>
       <tr>
         <td scope="col">Для копирования:</td>
       </tr>
       <tr>
-        <td scope="col">РД 153-34.1-003.01; РД 2730.940.102-92; СТО ЦКТИ 10.002-2007.</td>
+        <td scope="col">
+          <span v-for="(NTDItem, index) in sortNTDWeldingArr" :key="index">
+            <span v-if="index !== 0">, </span>
+            {{NTDItem.name}}
+          </span>
+        </td>
       </tr>
       <tr>
         <td scope="col">Нормативные документы на контроль:</td>
       </tr>
       <tr>
-        <td scope="col">Общие: ГОСТ 16037-80. КО(1): РД 153-34.1-003.01; РД 2730.940.103-92</td>
+        <td scope="col">
+
+          <span v-for="(NTDList, OTU, index) in foundNTDMethodControlObj" :key="OTU">
+            <span v-if="index !== 0"><br></span>
+            <b>{{ OTU }}: </b>
+
+            <span v-for="(methodItem, method, methodIndex) in NTDList" :key="methodIndex">
+              <span v-if="methodIndex !== 0">; </span>
+                <b><i>{{ method }}: </i></b>
+
+                <span v-for="(NTDItem, NTDindex) in methodItem" :key="NTDindex">
+                  <span v-if="NTDindex !== 0">, </span>
+                  <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
+                </span>
+            </span>
+          </span>
+        </td>
       </tr>
       <tr>
-        <td scope="col">Для копирования:</td>
+        <td scope="col">Для копирования в карты:</td>
       </tr>
       <tr>
-        <td scope="col">РД 153-34.1-003.01; РД 2730.940.102-92; СТО ЦКТИ 10.002-2007.</td>
+        <td scope="col">
+
+          <span v-for="(items, methodControl, index) in foundNTDMethodControlArr" :key="index">
+            <span v-if="index !== 0"><br></span>
+            <b>{{ methodControl }}: </b>
+            <span v-for="(NTDItem, NTDindex) in items" :key="NTDindex">
+              <span v-if="NTDindex !== 0">, </span>
+              <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
+            </span>
+          </span>
+
+        </td>
+      </tr>
+       <tr>
+        <td scope="col">Для копирования в протокол:</td>
+      </tr>
+      <tr>
+        <td scope="col">
+          {{NTDControlSting}}
+        </td>
       </tr>
       </tbody>
     </table>
 
+    <button @click="PickUpDocs()">Test</button>
+
 <input v-model="otuString">
 
     V3
-{{NTD_LIST}}
+
 </div>
 </template>
 
@@ -144,7 +200,7 @@ export default {
           },
           {
             id: 2,
-            name: 'УК',
+            name: 'УЗК',
             title: 'ультразвуковой контроль'
           },
           {
@@ -188,15 +244,254 @@ export default {
 
       },
 
-      otuString: ''
+      regulatoryDocsWelding: '',
+      selectedWeldingMethod: 'РД',
+      selectedDetailsType: ['Т'],
+      selectedMethodControl: ['ВИК', 'РК', 'УЗК'],
+
+      detailsTypeList: { Т: 'Труба', Л: 'Лист', С: 'Стержень' },
+      otuString: 'НГДО(4)',
+      weldingMethodList: ['РД', 'МП', 'РАД', 'Э'],
+      foundNTDWeldingObj: {},
+      foundNTDWeldingArr: [],
+
+      foundNTDMethodControlObj: {},
+      foundNTDMethodControlArr: {}
     }
   },
-  computed: {
-    ...mapGetters(['NTD_LIST'])
 
+  computed: {
+    ...mapGetters(['otuItems', 'NTD_LIST']),
+
+    sortNTDWeldingArr () {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      const arr = this.foundNTDWeldingArr.sort(
+        (a, b) => {
+          const x = a.name.toLowerCase()
+          const y = b.name.toLowerCase()
+          if (x < y) return -1
+          if (x > y) return 1
+          return 0
+        })
+      return arr
+    },
+
+    NTDControlSting () {
+      let arr = []
+      const vm = this.foundNTDMethodControlArr
+      Object.keys(vm).forEach(function (method) {
+        vm[method].forEach((ntd) => {
+          if (!arr.includes(ntd.name)) arr.push(ntd.name)
+        })
+      })
+      arr = arr.sort(
+        (a, b) => {
+          if (a < b) return -1
+          if (a > b) return 1
+          return 0
+        })
+      return arr.join(', ')
+    }
   },
   methods: {
-    ...mapActions(['getNtdList'])
+    ...mapActions(['getNtdList']),
+
+    reset () {
+      this.foundNTDWeldingObj = {}
+      this.foundNTDWeldingArr = []
+      this.foundNTDMethodControlObj = {}
+      this.foundNTDMethodControlArr = {}
+      // this.foundNTDMethodControlArr = {}
+    },
+
+    PickUpDocs () {
+      const foundInOTU = {}
+      this.reset()
+
+      const selectedOtu = this.stringToObject(this.otuString)
+
+      for (const indexOtu in this.NTD_LIST) {
+        const NTDOtu = this.stringToObject(this.NTD_LIST[indexOtu].otu)
+        const found = this.objectComparison(selectedOtu, NTDOtu)
+        // console.log(found)
+
+        // console.log('2- ', NTDOtu.stoGazprom)
+        const gazpromEnabled = this.gazpromEnabled(selectedOtu, NTDOtu)
+        console.log(gazpromEnabled)
+
+        if (found) {
+          found.forEach(element => {
+            if (!(element.key in foundInOTU)) {
+              foundInOTU[element.key] = {}
+            }
+            if (!(element.point in foundInOTU[element.key])) {
+              foundInOTU[element.key][element.point] = []
+            }
+            const methodWeldingComparison = this.methodWeldingComparison(this.selectedWeldingMethod, this.NTD_LIST[indexOtu].welding_method)
+            // console.log(methodWeldingComparison)
+            const detailsTypeComparison = this.detailsTypeComparison(this.selectedDetailsType, this.NTD_LIST[indexOtu].details_type)
+            // console.log(detailsTypeComparison)
+
+            if (methodWeldingComparison && detailsTypeComparison && gazpromEnabled) {
+              foundInOTU[element.key][element.point].push(this.NTD_LIST[indexOtu])
+            }
+          })
+        }
+      }
+      // this.regulatoryDocsWelding = foundInOTU
+      this.foundNTDWelding(foundInOTU)
+      this.foundNTDMethodControl(foundInOTU)
+    },
+
+    // ВЫборка из НТД где есть выбранные методы контроля
+    foundNTDMethodControl (NTDObject) {
+      const vm = this
+      Object.keys(NTDObject).forEach(function (key) {
+        Object.keys(NTDObject[key]).forEach(function (point) {
+          if (vm.otuItems[key] !== undefined) {
+            const keyNTDWelding = vm.otuItems[key].name + '(' + point + ')'
+
+            vm.foundNTDMethodControlObj[keyNTDWelding] = {}
+            const ntdList = NTDObject[key][point]
+
+            ntdList.forEach((ntd) => {
+            // console.log(ntd)
+              const methods = vm.methodControl(ntd)
+
+              if (methods) {
+                methods.forEach((method) => {
+                  if (!(method in vm.foundNTDMethodControlObj[keyNTDWelding])) {
+                    vm.foundNTDMethodControlObj[keyNTDWelding][method] = []
+                  }
+                  if (!(method in vm.foundNTDMethodControlArr)) {
+                    vm.foundNTDMethodControlArr[method] = []
+                  }
+
+                  vm.foundNTDMethodControlObj[keyNTDWelding][method].push(ntd)
+
+                  if (!vm.foundNTDMethodControlArr[method].includes(ntd)) vm.foundNTDMethodControlArr[method].push(ntd)
+                })
+              // if (!vm.foundNTDMethodControlArr.includes(ntd)) vm.foundNTDMethodControlArr.push(ntd)
+              }
+            })
+          }
+        })
+      })
+    },
+
+    methodControl (OTU) {
+      const vm = this
+      const result = []
+      const controlMethod = OTU.control_method
+      controlMethod.forEach((method) => {
+        if (vm.selectedMethodControl.includes(method.name)) result.push(method.name)
+      })
+      // console.log(result)
+      return result
+    },
+
+    // формирование объекта и массива из НТД по сварке
+    foundNTDWelding (NTDObject) {
+      const vm = this
+      Object.keys(NTDObject).forEach(function (key) {
+        Object.keys(NTDObject[key]).forEach(function (point) {
+          if (vm.otuItems[key] !== undefined) {
+            const keyNTDWelding = vm.otuItems[key].name + '(' + point + ')'
+            vm.foundNTDWeldingObj[keyNTDWelding] = []
+            const ntdList = NTDObject[key][point]
+            ntdList.forEach((el) => {
+              if (el.weld_enabled) {
+                vm.foundNTDWeldingObj[keyNTDWelding].push(el)
+                if (!vm.foundNTDWeldingArr.includes(el)) vm.foundNTDWeldingArr.push(el)
+              }
+            })
+          }
+        })
+      })
+    },
+
+    // Преобразование строки ОТУ в объект
+    stringToObject (otuString = {}) {
+      const selectedOtu = {}
+      // console.log(otuString)
+
+      let arr = otuString.split(')')
+      // удаляем пустые значения массива
+      arr = arr.filter((e) => e)
+      //
+      arr.forEach((el) => {
+        const nameOtu = el.split('(')
+        // удаляем запятые и пробелы
+        const searchTerm = nameOtu[0].replace(/^[,\s]+|[,\s]+$/g, '')
+
+        // ищем в объекте списка ОТУ название на русском
+        // и выбираем ключ (название на английском NGDO GO и тп.)
+        const found = Object.entries(this.otuItems)
+          .find((pair) => this.otuItems[pair[0]].name === searchTerm)
+        // добавляем в наш объект выбранных ОТУ полученные данные
+        // из строки номеров оту делаем массив и загоняем в объект
+        if (found !== undefined) {
+          selectedOtu[found[0]] = nameOtu[1].split(',')
+        }
+      })
+
+      selectedOtu.stoGazprom = []
+      if (otuString.indexOf(' с учётом СТО "Газпром"') >= 0) {
+        console.log(otuString)
+        selectedOtu.stoGazprom[0] = true
+      } else selectedOtu.stoGazprom[0] = false
+
+      // console.log('1- ', otuString, selectedOtu.stoGazprom)
+
+      return selectedOtu
+    },
+
+    // сравнения объектов ОТУ
+    objectComparison (object1, object2) {
+      // console.log(object1, object2)
+      const foundInOTU = []
+      const objKeys2 = Object.keys(object2) // из списка
+      for (const key of objKeys2) {
+        const value1 = object1[key]
+        const value2 = object2[key]
+        for (const i in value1) {
+          if (value2.includes(value1[i])) {
+            foundInOTU.push({ key, point: value1[i] })
+          }
+        }
+      }
+      if (foundInOTU.length === 0) {
+        return false
+      }
+      return foundInOTU
+    },
+
+    // Сравнение по способу сварки
+    methodWeldingComparison (methodWelding, methodWeldingString) {
+      const strMethodWelding = methodWeldingString.replace(/\s/g, '')
+      const arr = strMethodWelding.split(',')
+      if (arr.includes(methodWelding)) return true
+      return false
+    },
+
+    // Сравнение по видам деталей
+    detailsTypeComparison (detailsTypeArr, detailsTypeString) {
+      let result = false
+      const strDetailsType = detailsTypeString.replace(/\s/g, '')
+      const arr = strDetailsType.split(',')
+      detailsTypeArr.forEach((el) => {
+        if (arr.includes(el)) result = true
+      })
+      return result
+    },
+
+    // Сравнение по выбору с учётом СТО "Газпром"
+    gazpromEnabled (object1, object2) {
+      // console.log(object2.stoGazprom, object2.stoGazprom)
+      if (object1.stoGazprom[0] === object2.stoGazprom[0]) return true
+      return false
+    }
+
   },
 
   mounted () {

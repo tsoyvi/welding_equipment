@@ -5,7 +5,7 @@ export default ({
   state: {
     selectOtuShow: false,
     idTarget: null,
-    selectedOtu: {
+    /* selectedOtu: {
       0: [],
       1: [],
       2: [],
@@ -19,7 +19,7 @@ export default ({
       10: [],
       11: [],
       StoGazprom: []
-    },
+    }, */
     enableOtu: {},
     otuItems: []
 

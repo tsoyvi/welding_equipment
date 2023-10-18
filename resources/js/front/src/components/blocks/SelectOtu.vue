@@ -30,17 +30,18 @@
     </div>
 
     <label for="select-OTU">
-        <input type="checkbox" id="STO_GAZ" onClick="select_OTU();">
+        <input type="checkbox" id="STO_GAZ"
+          @change="otuToString()"
+          v-model="selectedOtu.stoGazprom[0]"
+        >
         С учетом ПАО "Газпром"
     </label>
 
-    <div class="OTU-button-close" @click="close()" @keydown="bar">
+    <div class="OTU-button-close"  @keydown="bar">
         <i class="fa fa-window-close" aria-hidden="true"></i>
     </div>
 
-    <div class="div-OTU-shadow" @click="close()" @keydown="bar"></div>
 </div>
-
 </template>
 
 <script>
@@ -68,7 +69,7 @@ export default {
         9: [],
         10: [],
         11: [],
-        StoGazprom: []
+        stoGazprom: [false]
       },
       otuString: '',
       isShowSelector: false
@@ -87,14 +88,17 @@ export default {
 
     otuToString () {
       let str = ''
+      // let subStr = ''
       this.otuString = ''
       Object.entries(this.selectedOtu).forEach((otu) => {
+        console.log(otu)
         str = otu[1].sort((a, b) => a - b).join(',')
         if (str && this.enableOtu[otu[0]] === true) {
           if (this.otuString !== '') { this.otuString += ', ' }
           this.otuString += `${this.otuItems[otu[0]].name}(${str})`
         }
       })
+      if (this.selectedOtu.stoGazprom[0]) this.otuString += ' с учётом СТО "Газпром"'
       this.$emit('update:modelValue', this.otuString)
       // console.log(this.otuString)
     },
@@ -164,9 +168,14 @@ export default {
           .find((pair) => this.otuItems[pair[0]].name === searchTerm)
         // добавляем в наш объект выбранных ОТУ полученные данные
         // из строки номеров оту делаем массив и загоняем в объект
-        this.selectedOtu[found[0]] = nameOtu[1].split(',')
-        this.enableOtu[found[0]] = true
+        if (found !== undefined) {
+          this.selectedOtu[found[0]] = nameOtu[1].split(',')
+          this.enableOtu[found[0]] = true
+        }
       })
+      if (this.otuString.indexOf(' с учётом СТО "Газпром"') >= 0) {
+        this.selectedOtu.stoGazprom[0] = true
+      } else this.selectedOtu.stoGazprom[0] = false
     }
 
   },
