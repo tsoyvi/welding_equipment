@@ -1,6 +1,6 @@
 <template>
 
-<textarea id="stringOTU" ref="stringOTU" class="form-control form-control-sm" @click="showSelector()" rows="5"
+<textarea id="stringOTU" ref="stringOTU" class="form-control form-control-sm" @click="showSelector()" rows="1"
     :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" readonly></textarea>
 
 <div id="divOTUSelector" ref="divOTUSelector" class="bg-light border border-success p-2 border-opacity-10 rounded-1"
@@ -91,7 +91,7 @@ export default {
       // let subStr = ''
       this.otuString = ''
       Object.entries(this.selectedOtu).forEach((otu) => {
-        console.log(otu)
+        // console.log(otu)
         str = otu[1].sort((a, b) => a - b).join(',')
         if (str && this.enableOtu[otu[0]] === true) {
           if (this.otuString !== '') { this.otuString += ', ' }
@@ -228,8 +228,8 @@ export default {
 }
 
 #stringOTU {
-  width: 300px;
   padding-top: 5px !important;
+  height: 100%;
 }
 
 </style>

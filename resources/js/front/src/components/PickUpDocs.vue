@@ -23,20 +23,21 @@
                 </td>
                 <td>
                     <div class="form-floating">
-                        <select class="form-select form-select-sm" id="floatingSelect"
+                        <select class="form-select form-select-sm selector-welding-method"
                           v-model="selectedWeldingMethod"
                         >
                           <option
-                            v-for="method in weldingMethodList"
-                            v-bind:value="method" :key="method"
-                          >{{method}}
+                            v-for="(method, index) in weldingMethodList"
+                            v-bind:value="method.name" :key="index"
+                            :title="method.description"
+                          >{{method.name}}
                           </option>
                         </select>
-                        <label for="floatingSelect">Способ сварки</label>
+
                     </div>
                 </td>
-                <td>
-                    <div class="form-check" v-for="(detail, index) in detailsTypeList" :key="index">
+                <td style="width: 250px">
+                    <div class="col form-check" v-for="(detail, index) in detailsTypeList" :key="index">
                         <input class="form-check-input" type="checkbox" :value="index" :id="index" v-model="selectedDetailsType">
                         <label class="form-check-label" :for="index">
                         {{index}} ({{detail}})
@@ -44,7 +45,7 @@
                     </div>
 
                 </td>
-                <td>
+                <td style="width: 375px">
                     <div class="row">
                         <div class="col" v-for="(method, index) in methodsControl.NK" :key="index">
                             <div
@@ -62,6 +63,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col" v-for="(method, index) in methodsControl.RK" :key="index">
                             <div
@@ -164,7 +166,7 @@
       </tbody>
     </table>
 
-    <button @click="PickUpDocs()">Test</button>
+    <button @click="pickUpDocs()">Test</button>
 
 <input v-model="otuString">
 
@@ -232,11 +234,16 @@ export default {
           },
           {
             id: 3,
+            name: 'Отрыв',
+            title: 'Отрыв седлового отвода'
+          },
+          {
+            id: 4,
             name: 'Сдвиг',
             title: 'Испытание на сдвиг'
           },
           {
-            id: 4,
+            id: 5,
             name: 'Металлография',
             title: 'Металлографические исследования'
           }
@@ -250,8 +257,8 @@ export default {
       selectedMethodControl: ['ВИК', 'РК', 'УЗК'],
 
       detailsTypeList: { Т: 'Труба', Л: 'Лист', С: 'Стержень' },
-      otuString: 'НГДО(4)',
-      weldingMethodList: ['РД', 'МП', 'РАД', 'Э'],
+      otuString: '',
+      // weldingMethodList: null,
       foundNTDWeldingObj: {},
       foundNTDWeldingArr: [],
 
@@ -261,7 +268,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['otuItems', 'NTD_LIST']),
+    ...mapGetters(['otuItems', 'NTD_LIST', 'METHODS_WELDING_LIST']),
 
     sortNTDWeldingArr () {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
@@ -291,6 +298,10 @@ export default {
           return 0
         })
       return arr.join(', ')
+    },
+
+    weldingMethodList () {
+      return this.METHODS_WELDING_LIST.filter((el) => el.enabled === true)
     }
   },
   methods: {
@@ -304,7 +315,7 @@ export default {
       // this.foundNTDMethodControlArr = {}
     },
 
-    PickUpDocs () {
+    pickUpDocs () {
       const foundInOTU = {}
       this.reset()
 
@@ -441,8 +452,6 @@ export default {
         selectedOtu.stoGazprom[0] = true
       } else selectedOtu.stoGazprom[0] = false
 
-      // console.log('1- ', otuString, selectedOtu.stoGazprom)
-
       return selectedOtu
     },
 
@@ -494,6 +503,21 @@ export default {
 
   },
 
+  watch: {
+    otuString: function () {
+      this.pickUpDocs()
+    },
+    selectedDetailsType: function () {
+      this.pickUpDocs()
+    },
+    selectedWeldingMethod: function () {
+      this.pickUpDocs()
+    },
+    selectedMethodControl: function () {
+      this.pickUpDocs()
+    }
+  },
+
   mounted () {
     this.getNtdList()
   }
@@ -505,6 +529,10 @@ export default {
 <style>
 body {
   background-color: #FFF7F7;
+}
+
+.selector-welding-method {
+  padding-top: 5px !important;
 }
 
 </style>

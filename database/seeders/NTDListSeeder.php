@@ -90,7 +90,7 @@ class NTDListSeeder extends Seeder
 
         if ($json['Otriv_Evaluation'] != "") {
             $arrControlMethod[] = [
-                "name" => "Отрыв(ПЭ)",
+                "name" => "Отрыв",
                 "clause" => $json['Otriv_Evaluation'],
             ];
         }
