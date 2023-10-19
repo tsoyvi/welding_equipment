@@ -23,6 +23,8 @@ class NTDListSeeder extends Seeder
         for ($i = 0; $i < count($json); $i++) {
             DB::table('ntd_lists')->insert($this->getData($json[$i]));
         }
+
+        echo "Загрузка завершена";
     }
 
     public function getData($json)
@@ -106,6 +108,8 @@ class NTDListSeeder extends Seeder
         $json['Material_type_used'] = str_replace('M', 'М', $json['Material_type_used']);
         $json['Material_type_used'] = trim($json['Material_type_used']);
         $json['Material_type_used'] = substr($json['Material_type_used'], 0, -1);
+
+        $json['OTU_used'] = str_replace('+СТО Газпром', 'с учётом СТО "Газпром"', $json['OTU_used']);
 
         $data = [
             'name' => $json['NTD_short_name'],
