@@ -253,11 +253,11 @@ export default {
 
       regulatoryDocsWelding: '',
       selectedWeldingMethod: 'РД',
-      selectedDetailsType: ['Т'],
-      selectedMethodControl: ['ВИК', 'РК', 'УЗК'],
+      selectedDetailsType: ['Т', 'С'],
+      selectedMethodControl: ['ВИК', 'РК', 'УЗК', 'Растяжение'],
 
       detailsTypeList: { Т: 'Труба', Л: 'Лист', С: 'Стержень' },
-      otuString: '',
+      otuString: 'НГДО(4), СК(2)',
       // weldingMethodList: null,
       foundNTDWeldingObj: {},
       foundNTDWeldingArr: [],
@@ -317,6 +317,53 @@ export default {
 
     pickUpDocs () {
       const foundInOTU = {}
+      // const foundNTD = {}
+      this.reset()
+
+      const selectedOtu = this.stringToObject(this.otuString)
+
+      for (const indexOtu in this.NTD_LIST) {
+        const NTDOtu = this.stringToObject(this.NTD_LIST[indexOtu].otu)
+        const found = this.objectComparison(selectedOtu, NTDOtu)
+        const gazpromEnabled = this.gazpromEnabled(selectedOtu, NTDOtu)
+        // console.log(gazpromEnabled)
+
+        if (found) {
+          found.forEach(indexOTU => { // key - НГДО, point - (4)
+            if (!(indexOTU.key in foundInOTU)) {
+              foundInOTU[indexOTU.key] = {}
+            }
+            if (!(indexOTU.point in foundInOTU[indexOTU.key])) foundInOTU[indexOTU.key][indexOTU.point] = [] // проверка наличия ключа
+
+            // поиск по способу сварки
+            const methodWeldingComparison = this.methodWeldingComparison(this.selectedWeldingMethod, this.NTD_LIST[indexOtu].welding_method)
+
+            if (methodWeldingComparison && gazpromEnabled) {
+              // поиск по виду деталей
+              const detailsTypeComparison = this.detailsTypeComparison(this.selectedDetailsType, this.NTD_LIST[indexOtu].details_type)
+              const fNTD = foundInOTU[indexOTU.key][indexOTU.point]
+
+              if (detailsTypeComparison) {
+                detailsTypeComparison.forEach((detailType) => { // detailType  - Т, Л, С
+                  if (!(detailType in fNTD)) fNTD[detailType] = [] // проверка наличия ключа
+
+                  const methodControlComparison = this.methodControlComparison(this.selectedMethodControl, this.NTD_LIST[indexOtu].control_method)
+                  console.log(methodControlComparison)
+
+                  fNTD[detailType].push(this.NTD_LIST[indexOtu])
+                })
+              }
+            }
+          })
+        }
+      }
+      this.foundNTDWelding(foundInOTU)
+      console.log(foundInOTU)
+    },
+
+    pickUpDocs__ () {
+      const foundInOTU = {}
+      const foundNTD = {}
       this.reset()
 
       const selectedOtu = this.stringToObject(this.otuString)
@@ -328,7 +375,7 @@ export default {
 
         // console.log('2- ', NTDOtu.stoGazprom)
         const gazpromEnabled = this.gazpromEnabled(selectedOtu, NTDOtu)
-        console.log(gazpromEnabled)
+        // console.log(gazpromEnabled)
 
         if (found) {
           found.forEach(element => {
@@ -344,16 +391,35 @@ export default {
             // console.log(detailsTypeComparison)
 
             if (methodWeldingComparison && detailsTypeComparison && gazpromEnabled) {
+              if (!(element.key in foundNTD)) {
+                foundNTD[element.key] = {}
+              }
+              if (!(element.point in foundNTD[element.key])) {
+                foundNTD[element.key][element.point] = {}
+              }
+
+              const fNTD = foundNTD[element.key][element.point]
+              detailsTypeComparison.forEach((detailType) => {
+                if (!(detailType in fNTD)) {
+                  fNTD[detailType] = []
+                }
+                // fNTD[detailType].push(this.NTD_LIST[indexOtu])
+                this.test(this.NTD_LIST[indexOtu])
+              })
+
               foundInOTU[element.key][element.point].push(this.NTD_LIST[indexOtu])
             }
           })
         }
       }
+      console.log(foundNTD)
       // this.regulatoryDocsWelding = foundInOTU
       this.foundNTDWelding(foundInOTU)
-      this.foundNTDMethodControl(foundInOTU)
+      // this.foundNTDMethodControl(foundInOTU)
+      // this.foundNTDMethodControl2(foundNTD)
     },
 
+    /*
     // ВЫборка из НТД где есть выбранные методы контроля
     foundNTDMethodControl (NTDObject) {
       const vm = this
@@ -389,17 +455,7 @@ export default {
         })
       })
     },
-
-    methodControl (OTU) {
-      const vm = this
-      const result = []
-      const controlMethod = OTU.control_method
-      controlMethod.forEach((method) => {
-        if (vm.selectedMethodControl.includes(method.name)) result.push(method.name)
-      })
-      // console.log(result)
-      return result
-    },
+*/
 
     // формирование объекта и массива из НТД по сварке
     foundNTDWelding (NTDObject) {
@@ -448,7 +504,7 @@ export default {
 
       selectedOtu.stoGazprom = []
       if (otuString.indexOf(' с учётом СТО "Газпром"') >= 0) {
-        console.log(otuString)
+        // console.log(otuString)
         selectedOtu.stoGazprom[0] = true
       } else selectedOtu.stoGazprom[0] = false
 
@@ -456,13 +512,14 @@ export default {
     },
 
     // сравнения объектов ОТУ
-    objectComparison (object1, object2) {
+    objectComparison (selectedOtu, NTDOtu) {
       // console.log(object1, object2)
       const foundInOTU = []
-      const objKeys2 = Object.keys(object2) // из списка
+      const objKeys2 = Object.keys(NTDOtu) // из списка
       for (const key of objKeys2) {
-        const value1 = object1[key]
-        const value2 = object2[key]
+        if (key === 'stoGazprom') continue
+        const value1 = selectedOtu[key]
+        const value2 = NTDOtu[key]
         for (const i in value1) {
           if (value2.includes(value1[i])) {
             foundInOTU.push({ key, point: value1[i] })
@@ -485,12 +542,28 @@ export default {
 
     // Сравнение по видам деталей
     detailsTypeComparison (detailsTypeArr, detailsTypeString) {
-      let result = false
+      const result = []
       const strDetailsType = detailsTypeString.replace(/\s/g, '')
       const arr = strDetailsType.split(',')
       detailsTypeArr.forEach((el) => {
-        if (arr.includes(el)) result = true
+        if (arr.includes(el)) result.push(el)
       })
+      if (result.length !== 0) return result
+      return false
+    },
+
+    // Сравнение по методы контроля
+    methodControlComparison (selectedMethodControl, NTDMethodControlObj) {
+      // console.log(selectedMethodControl)
+      // console.log(NTDMethodControlObj)
+      const result = []
+      // const controlMethod = OTU.control_method
+      selectedMethodControl.forEach((method) => {
+        NTDMethodControlObj.forEach((methodNTD) => {
+          if (method.includes(methodNTD.name)) result.push(method)
+        })
+      })
+      // console.log(result)
       return result
     },
 
