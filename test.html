@@ -1,40 +1,277 @@
-<textarea id="stringOTU" ref="stringOTU" class="form-control form-control-sm" @click="showSelector()" rows="5"
-    :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" readonly></textarea>
+<template>
+    <div class="container">
+        <h5 class="text-center">Подбор нормативных документов</h5>
+        <table class="table table-bordered border-primary table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">ОТУ</th>
+                    <th scope="col">Способ сварки</th>
+                    <th scope="col">Вид свариваемых деталей</th>
+                    <th scope="col">Методы контроля</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="form-floating">
+                            <SelectOtu v-model="otuString" />
 
-<div id="divOTUSelector" ref="divOTUSelector" class="bg-light border border-success p-2 border-opacity-10 rounded-1"
-    v-show="isShowSelector">
+                        </div>
 
-    <div v-for="(otuItem, otuIndex) in otuItems" :key="otuIndex">
-        <label :for="'surName' + otuIndex" class="form-check-label">
-            <input type="checkbox" :value="otuItem.name" :id="'surName' + otuIndex" class="form-check-input remove-halo"
-                @change="otuToString()" v-model="enableOtu[otuIndex]">
-            {{ otuItem.name + ' - ' + otuItem.header }}
-        </label>
+                    </td>
+                    <td>
+                        <div class="form-floating">
+                            <select class="form-select form-select-sm selector-welding-method"
+                                v-model="selectedWeldingMethod">
+                                <option v-for="(method, index) in weldingMethodList" v-bind:value="method.name"
+                                    :key="index" :title="method.description">{{method.name}}
+                                </option>
+                            </select>
 
-        <transition name="listotu-fade">
-            <div class="bg-light-subtle" v-show="enableOtu[otuIndex]">
+                        </div>
+                    </td>
+                    <td style="width: 250px">
+                        <div class="col form-check" v-for="(detail, index) in detailsTypeList" :key="index">
+                            <input class="form-check-input" type="checkbox" :value="index" :id="index"
+                                v-model="selectedDetailsType">
+                            <label class="form-check-label" :for="index">
+                                {{index}} ({{detail}})
+                            </label>
+                        </div>
 
-                <label :for="otuItem.name + item.index" v-for="(item, index) in otuItem.list" :key="index"
-                    class="form-check-label ms-2">
-                    <input type="checkbox" :value="item.index" :id="otuItem.name + item.index"
-                        v-model="selectedOtu[otuIndex]" @change="otuToString()" :title="item.description"
-                        class="form-check-input remove-halo">
-                    {{ otuItem.name }}({{ item.index }})
-                </label>
+                    </td>
+                    <td style="width: 375px">
+                        <div class="row">
+                            <div class="col" v-for="(method, index) in methodsControl.NK" :key="index">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" :value="method.name"
+                                        :title="method.title" :id="method.name" v-model="selectedMethodControl">
+                                    <label class="form-check-label" :for="method.name">
+                                        {{method.name}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col" v-for="(method, index) in methodsControl.RK" :key="index">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" :value="method.name"
+                                        :title="method.title" :id="method.name" v-model="selectedMethodControl">
+                                    <label class="form-check-label" :for="method.name">
+                                        {{method.name}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
+
+                <h2 class="accordion-header" id="NTDWeldingByOTU">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                        aria-controls="panelsStayOpen-collapseOne">
+                        Перечень нормативных документов на сварку по ОТУ:
+                    </button>
+                </h2>
+
+                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse"
+                    aria-labelledby="NTDWeldingByOTU">
+                    <div class="accordion-body">
+                        <table width="100%" class="table-fount-NTD">
+                            <tbody>
+                                <tr v-for="(typeDetails, otu, index) in NTDWeldingByOTU" :key="index">
+                                    <td style="width: 100px"><b>{{ otu }}: </b></td>
+                                    <td>
+                                        <span class=""
+                                            v-for="(typeDetailItem, typeDetail, typeDetailIndex) in typeDetails"
+                                            :key="typeDetailIndex">
+                                            <span v-if="typeDetailIndex !== 0"><br> </span>
+                                            <span class=""><b><i>{{ typeDetail }}: </i></b></span>
+                                            <span v-for="(NTDItem, NTDindex) in typeDetailItem" :key="NTDindex">
+                                                <span v-if="NTDindex !== 0">, </span>
+                                                <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
+                                            </span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
 
             </div>
-        </transition>
+        </div>
 
+        <div class="accordion" id="">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#NTDWeldingObjToMap">
+                        Нормативные документы на сварку для копирования в карты:
+                    </button>
+                </h2>
+                <div id="NTDWeldingObjToMap" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        <table width="100%" class="table-fount-NTD">
+                            <tbody>
+                                <tr v-for="(items, typeDetail, index) in NTDWeldingObjToMap" :key="index">
+                                    <td style="width: 100px"><b>{{ typeDetail }}: </b></td>
+                                    <td>
+                                        <span v-for="(NTDItem, NTDindex) in items" :key="NTDindex">
+                                            <span v-if="NTDindex !== 0">, </span>
+                                            <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="accordion" id="">
+        <div class="accordion" id="">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#NTDWelding">
+                        Нормативные документы на сварку для копирования в заявку (протокол):
+                    </button>
+                </h2>
+                <div id="NTDWelding" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
 
-    <label for="select-OTU">
-        <input type="checkbox" id="STO_GAZ" onClick="select_OTU();">
-        С учетом ПАО "Газпром"
-    </label>
-
-    <div class="OTU-button-close" @click="close()" @keydown="bar">
-        <i class="fa fa-window-close" aria-hidden="true"></i>
+                        <span v-for="(NTDItem, index) in NTDWelding" :key="index">
+                            <span v-if="index !== 0">, </span>
+                            {{NTDItem.name}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <br>
+    <!--   -->
+    <div class="accordion" id="NTDControl">
+        <div class="accordion-item">
 
-    <div class="div-OTU-shadow" @click="close()" @keydown="bar"></div>
-</div>
+            <h2 class="accordion-header" id="">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#NTDControlAllObj" aria-expanded="true">Нормативные документы на контроль:
+                </button>
+            </h2>
+
+            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="NTDControlAllObj">
+                <div class="accordion-body">
+
+                    <table width="100%" class="table-fount-NTD">
+                        <tbody>
+                            <tr v-for="(NTDList, OTU) in NTDControlAllObj" :key="OTU">
+                                <!-- <span v-if="index !== 0"><br></span> -->
+                                <td style="width: 100px"><b>{{ OTU }}: </b></td>
+
+                                <td v-for="(typeDetailItem, typeDetail, typeDetailIndex) in NTDList"
+                                    :key="typeDetailIndex">
+                                    <!-- <span v-if="typeDetailIndex !== 0">; </span> -->
+                                    <table width="100%" class="table-fount-NTD-sub">
+                                        <tbody>
+                                            <tr>
+                                                <td><b><i>{{ typeDetail }}: </i></b></td>
+                                                <td>
+                                                    <span
+                                                        v-for="(methodControlItem, methodControl, methodControlIndex) in typeDetailItem"
+                                                        :key="methodControlIndex">
+                                                        <span v-if="methodControlIndex !== 0"><br></span>
+                                                        <span class=""><b><i>{{methodControl}}: </i></b></span>
+
+                                                        <span v-for="(NTDItem, NTDindex) in methodControlItem"
+                                                            :key="NTDindex">
+                                                            <span v-if="NTDindex !== 0">, </span>
+                                                            <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
+                                                        </span>
+
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="accordion" id="">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#NTDControlObj">
+                        Нормативные документы на сварку для копирования в заявку (протокол):
+                    </button>
+                </h2>
+                <div id="NTDControlObj" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        <table width="100%" class="table-fount-NTD">
+                            <tbody>
+                                <tr v-for="(items, typeDetail, index) in NTDControlObj" :key="index">
+                                    <!-- <span v-if="index !== 0"><br></span> -->
+                                    <td style="width: 100px"><b>{{ typeDetail }}: </b></td>
+                                    <td>
+                                        <table width="100%" class="table-fount-NTD-sub table-fount-NTD-row">
+                                            <tbody>
+
+                                                <tr v-for="(methodItem, method, methodIndex) in items"
+                                                    :key="methodIndex">
+                                                    <!-- <span v-if="methodIndex !== 0"><br> </span> -->
+                                                    <td> <b><i>{{ method }}: </i></b> </td>
+                                                    <td>
+                                                        <span v-for="(NTDItem, NTDindex) in methodItem" :key="NTDindex">
+                                                            <span v-if="NTDindex !== 0">, </span>
+                                                            <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
+                                                        </span>
+                                                    </td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#NTDControlSting" aria-expanded="true">Нормативные документы на контроль:
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse"
+                    aria-labelledby="NTDControlSting">
+                    <div class="accordion-body">
+                        {{NTDControlSting}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button @click="pickUpDocs()">Test</button>
+
+        <input v-model="otuString">
+
+        V3
+    </div>
+</template>

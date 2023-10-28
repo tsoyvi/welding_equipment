@@ -1,178 +1,286 @@
 <template>
-<div class="container">
-  <h5 class="text-center">Подбор нормативных документов</h5>
-    <table class="table table-bordered border-primary table-striped table-sm">
-        <thead>
-            <tr>
-                <th scope="col">ОТУ</th>
-                <th scope="col">Способ сварки</th>
-                <th scope="col">Вид свариваемых деталей</th>
-                <th scope="col">Методы контроля</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <div class="form-floating">
-                      <SelectOtu
-                        v-model="otuString"
-                      />
+    <div class="container">
+        <h5 class="text-center">Подбор нормативных документов</h5>
+        <table class="table table-bordered border-primary table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">ОТУ</th>
+                    <th scope="col">Способ сварки</th>
+                    <th scope="col">Вид свариваемых деталей</th>
+                    <th scope="col">Методы контроля</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="form-floating">
+                            <SelectOtu v-model="otuString" />
 
-                    </div>
+                        </div>
 
-                </td>
-                <td>
-                    <div class="form-floating">
-                        <select class="form-select form-select-sm selector-welding-method"
-                          v-model="selectedWeldingMethod"
-                        >
-                          <option
-                            v-for="(method, index) in weldingMethodList"
-                            v-bind:value="method.name" :key="index"
-                            :title="method.description"
-                          >{{method.name}}
-                          </option>
-                        </select>
+                    </td>
+                    <td>
+                        <div class="form-floating">
+                            <select class="form-select form-select-sm selector-welding-method"
+                                v-model="selectedWeldingMethod">
+                                <option v-for="(method, index) in weldingMethodList" v-bind:value="method.name"
+                                    :key="index" :title="method.description">{{method.name}}
+                                </option>
+                            </select>
 
-                    </div>
-                </td>
-                <td style="width: 250px">
-                    <div class="col form-check" v-for="(detail, index) in detailsTypeList" :key="index">
-                        <input class="form-check-input" type="checkbox" :value="index" :id="index" v-model="selectedDetailsType">
-                        <label class="form-check-label" :for="index">
-                        {{index}} ({{detail}})
-                        </label>
-                    </div>
+                        </div>
+                    </td>
+                    <td style="width: 250px">
+                        <div class="col form-check" v-for="(detail, index) in detailsTypeList" :key="index">
+                            <input class="form-check-input" type="checkbox" :value="index" :id="index"
+                                v-model="selectedDetailsType">
+                            <label class="form-check-label" :for="index">
+                                {{index}} ({{detail}})
+                            </label>
+                        </div>
 
-                </td>
-                <td style="width: 375px">
-                    <div class="row">
-                        <div class="col" v-for="(method, index) in methodsControl.NK" :key="index">
-                            <div
-                                class="form-check"
-                            >
-                                <input class="form-check-input" type="checkbox"
-                                :value="method.name"
-                                :title="method.title"
-                                :id="method.name"
-                                v-model="selectedMethodControl"
-                                >
-                                <label class="form-check-label" :for="method.name">
-                                    {{method.name}}
-                                </label>
+                    </td>
+                    <td style="width: 375px">
+                        <div class="row">
+                            <div class="col" v-for="(method, index) in methodsControl.NK" :key="index">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" :value="method.name"
+                                        :title="method.title" :id="method.name" v-model="selectedMethodControl">
+                                    <label class="form-check-label" :for="method.name">
+                                        {{method.name}}
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col" v-for="(method, index) in methodsControl.RK" :key="index">
-                            <div
-                                class="form-check"
-                            >
-                                <input class="form-check-input" type="checkbox"
-                                  :value="method.name"
-                                  :title="method.title"
-                                  :id="method.name"
-                                  v-model="selectedMethodControl"
-                                >
-                                <label class="form-check-label" :for="method.name">
-                                    {{method.name}}
-                                </label>
+                        <div class="row">
+                            <div class="col" v-for="(method, index) in methodsControl.RK" :key="index">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" :value="method.name"
+                                        :title="method.title" :id="method.name" v-model="selectedMethodControl">
+                                    <label class="form-check-label" :for="method.name">
+                                        {{method.name}}
+                                    </label>
+                                </div>
                             </div>
                         </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
+
+                <h2 class="accordion-header" id="NTDWeldingByOTU">
+                    <button class="accordion-button accordion-style " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                        aria-controls="panelsStayOpen-collapseOne">
+                        <b>Перечень нормативных документов на сварку по ОТУ:</b>
+                    </button>
+                </h2>
+
+                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse"
+                    aria-labelledby="NTDWeldingByOTU">
+                    <div class="accordion-body">
+                        <table width="100%" class="table-fount-NTD">
+                            <tbody>
+                                <tr v-for="(typeDetails, otu, index) in NTDWeldingByOTU" :key="index">
+                                    <td style="width: 100px"><b>{{ otu }}: </b></td>
+                                    <td>
+                                        <span class=""
+                                            v-for="(typeDetailItem, typeDetail, typeDetailIndex) in typeDetails"
+                                            :key="typeDetailIndex">
+                                            <span v-if="typeDetailIndex !== 0"><br> </span>
+                                            <span class=""><b><i>{{ typeDetail }}: </i></b></span>
+                                            <span v-for="(NTDItem, NTDindex) in typeDetailItem" :key="NTDindex">
+                                                <span v-if="NTDindex !== 0">, </span>
+                                                <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
+                                            </span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
                     </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                </div>
 
-    <table class="table table-bordered border-primary table-striped table-sm">
-      <tbody>
-      <tr>
-        <td scope="col">Нормативные документы на сварку:</td>
-      </tr>
-      <tr>
-        <td scope="col">
-          <span v-for="(NTDList, key, index) in foundNTDWeldingObj" :key="key">
-            <span v-if="index !== 0"><br></span>
-            <b>{{ key }}: </b>
-            <span v-for="(NTDItem, NTDindex) in NTDList" :key="NTDindex">
-              <span v-if="NTDindex !== 0">, </span>
-              <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
-            </span>
+            </div>
 
-          </span>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="">
+                    <button class="accordion-button accordion-style " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#NTDWeldingObjToMap">
+                        <b>Нормативные документы на сварку для копирования в карты:</b>
+                    </button>
+                </h2>
+                <div id="NTDWeldingObjToMap" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        <table width="100%" class="table-fount-NTD">
+                            <tbody>
+                                <tr v-for="(items, typeDetail, index) in NTDWeldingObjToMap" :key="index">
+                                    <td style="width: 100px"><b>{{ typeDetail }}: </b></td>
+                                    <td>
+                                        <span v-for="(NTDItem, NTDindex) in items" :key="NTDindex">
+                                            <span v-if="NTDindex !== 0">, </span>
+                                            <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-        </td>
-      </tr>
-      <tr>
-        <td scope="col">Для копирования:</td>
-      </tr>
-      <tr>
-        <td scope="col">
-          <span v-for="(NTDItem, index) in sortNTDWeldingArr" :key="index">
-            <span v-if="index !== 0">, </span>
-            {{NTDItem.name}}
-          </span>
-        </td>
-      </tr>
-      <tr>
-        <td scope="col">Нормативные документы на контроль:</td>
-      </tr>
-      <tr>
-        <td scope="col">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="">
+                    <button class="accordion-button accordion-style " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#NTDWelding">
+                        <b>Нормативные документы на сварку для копирования в заявку (протокол):</b>
+                    </button>
+                </h2>
+                <div id="NTDWelding" class="accordion-collapse collapse show">
+                    <div class="accordion-body" v-if="NTDWelding.length!==0">
 
-          <span v-for="(NTDList, OTU, index) in foundNTDMethodControlObj" :key="OTU">
-            <span v-if="index !== 0"><br></span>
-            <b>{{ OTU }}: </b>
+                        <span v-for="(NTDItem, index) in NTDWelding" :key="index">
+                            <span v-if="index !== 0">, </span>
+                            {{NTDItem.name}}
+                        </span>
+                    </div>
+                    <div class="accordion-body" v-else>Выберите параметры</div>
+                </div>
+            </div>
+        </div>
 
-            <span v-for="(methodItem, method, methodIndex) in NTDList" :key="methodIndex">
-              <span v-if="methodIndex !== 0">; </span>
-                <b><i>{{ method }}: </i></b>
+        <hr>
+        <!--   -->
+        <div class="accordion" id="NTDControl">
+            <div class="accordion-item">
 
-                <span v-for="(NTDItem, NTDindex) in methodItem" :key="NTDindex">
-                  <span v-if="NTDindex !== 0">, </span>
-                  <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
-                </span>
-            </span>
-          </span>
-        </td>
-      </tr>
-      <tr>
-        <td scope="col">Для копирования в карты:</td>
-      </tr>
-      <tr>
-        <td scope="col">
+                <h2 class="accordion-header" id="">
+                    <button class="accordion-button accordion-style " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#NTDControlAllObj"
+                        ><b>Нормативные документы на контроль:</b>
+                    </button>
+                </h2>
 
-          <span v-for="(items, methodControl, index) in foundNTDMethodControlArr" :key="index">
-            <span v-if="index !== 0"><br></span>
-            <b>{{ methodControl }}: </b>
-            <span v-for="(NTDItem, NTDindex) in items" :key="NTDindex">
-              <span v-if="NTDindex !== 0">, </span>
-              <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
-            </span>
-          </span>
+                <div id="NTDControlAllObj" class="accordion-collapse collapse">
+                    <div class="accordion-body">
 
-        </td>
-      </tr>
-       <tr>
-        <td scope="col">Для копирования в протокол:</td>
-      </tr>
-      <tr>
-        <td scope="col">
-          {{NTDControlSting}}
-        </td>
-      </tr>
-      </tbody>
-    </table>
+                        <table width="100%" class="table-fount-NTD">
+                            <tbody>
+                                <tr v-for="(NTDList, OTU) in NTDControlAllObj" :key="OTU">
+                                    <!-- <span v-if="index !== 0"><br></span> -->
+                                    <td style="width: 100px"><b>{{ OTU }}: </b></td>
 
-    <button @click="pickUpDocs()">Test</button>
+                                    <td v-for="(typeDetailItem, typeDetail, typeDetailIndex) in NTDList"
+                                        :key="typeDetailIndex">
+                                        <!-- <span v-if="typeDetailIndex !== 0">; </span> -->
+                                        <table width="100%" class="table-fount-NTD-sub">
+                                            <tbody>
+                                                <tr>
+                                                    <td><b><i>{{ typeDetail }}: </i></b></td>
+                                                    <td>
+                                                        <span
+                                                            v-for="(methodControlItem, methodControl, methodControlIndex) in typeDetailItem"
+                                                            :key="methodControlIndex">
+                                                            <span v-if="methodControlIndex !== 0"><br></span>
+                                                            <span class=""><b><i>{{methodControl}}: </i></b></span>
 
-<input v-model="otuString">
+                                                            <span v-for="(NTDItem, NTDindex) in methodControlItem"
+                                                                :key="NTDindex">
+                                                                <span v-if="NTDindex !== 0">, </span>
+                                                                <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
+                                                            </span>
 
-    V3
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
 
-</div>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="">
+                    <button class="accordion-button accordion-style " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#NTDControlObj">
+                        <b>Нормативные документы на сварку для копирования в заявку (протокол):</b>
+                    </button>
+                </h2>
+                <div id="NTDControlObj" class="accordion-collapse collapse show">
+                    <div class="accordion-body" v-if="NTDControlObj.length!==0">
+                        <table width="100%" class="table-fount-NTD" >
+                            <tbody>
+                                <tr  v-for="(items, typeDetail, index) in NTDControlObj" :key="index">
+                                    <td style="width: 100px"><b>{{ typeDetail }}: </b></td>
+                                    <td>
+                                        <table width="100%" class="table-fount-NTD-sub table-fount-NTD-row">
+                                            <tbody>
+                                                <tr v-for="(methodItem, method, methodIndex) in items"
+                                                    :key="methodIndex">
+                                                    <!-- <span v-if="methodIndex !== 0"><br> </span> -->
+                                                    <td> <b><i>{{ method }}: </i></b> </td>
+                                                    <td>
+                                                        <span v-for="(NTDItem, NTDindex) in methodItem" :key="NTDindex">
+                                                            <span v-if="NTDindex !== 0">, </span>
+                                                            <span :title="NTDItem.long_name">{{NTDItem.name}}</span>
+                                                        </span>
+                                                    </td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><div class="accordion-body" v-else> yecv</div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="">
+                    <button class="accordion-button accordion-style" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#NTDControlSting" aria-expanded="true"><b>Нормативные документы на контроль:</b>
+                    </button>
+                </h2>
+                <div id="NTDControlSting" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                       <span v-if="NTDControlSting !==''"> {{NTDControlSting}} </span>
+                       <span v-else>Выберите параметры</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--
+        <button @click="pickUpDocs()">Test</button>
+        <input v-model="otuString">
+-->
+        <hr>
+        <footer class="pt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-1">V3</div>
+                    <div class="col">ООО "НАКС-ПФО" Лаборатория контроля</div>
+                    <div class="col">
+                       Дизайн Цой Вячеслав Игоревич
+                    </div>
+                    <div class="col-1">2023г.</div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
 </template>
 
 <script>
@@ -257,22 +365,85 @@ export default {
       selectedMethodControl: ['ВИК', 'РК', 'УЗК', 'Растяжение'],
 
       detailsTypeList: { Т: 'Труба', Л: 'Лист', С: 'Стержень' },
-      otuString: 'НГДО(4), СК(2)',
-      // weldingMethodList: null,
+      // otuString: 'НГДО(4), СК(2)',
+      otuString: '',
       foundNTDWeldingObj: {},
-      foundNTDWeldingArr: [],
-
       foundNTDMethodControlObj: {},
-      foundNTDMethodControlArr: {}
+      foundNTDMethodControlToCopy: []
     }
   },
 
   computed: {
     ...mapGetters(['otuItems', 'NTD_LIST', 'METHODS_WELDING_LIST']),
 
-    sortNTDWeldingArr () {
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      const arr = this.foundNTDWeldingArr.sort(
+    // Формирование объекта на контроль для проверки по ОТУ Способам и тип деталей
+    NTDControlAllObj () {
+      const vm = this
+      const NTDObject = this.foundNTDMethodControlObj
+      // Очень тупое копирование объекта
+      const obj = {}
+      Object.keys(NTDObject).forEach(function (key) {
+        Object.keys(NTDObject[key]).forEach(function (point) {
+          // console.log(NTDObject[key], NTDObject[key][point])
+          if (vm.otuItems[key] !== undefined) {
+            const OTUName = vm.otuItems[key].name + '(' + point + ')'
+
+            // Здесь необходима оптимизация кода (копирование объекта)
+            if (!(OTUName in obj)) obj[OTUName] = {}
+            Object.keys(NTDObject[key][point]).forEach(function (typeDetail) {
+              if (!(typeDetail in obj[OTUName])) obj[OTUName][typeDetail] = {}
+              const arrNTDOnTypeDetail = NTDObject[key][point][typeDetail]
+              Object.keys(arrNTDOnTypeDetail).forEach(function (methodControl) {
+              // console.log(methodControl)
+                if (!(methodControl in obj[OTUName][typeDetail])) obj[OTUName][typeDetail][methodControl] = []
+                arrNTDOnTypeDetail[methodControl].forEach((ntd) => {
+                  obj[OTUName][typeDetail][methodControl].push(ntd)
+                })
+              })
+            })
+          }
+        })
+      })
+      return obj
+    },
+
+    // формирование объекта на контроль для копирования в карты
+    NTDControlObj () {
+      const obj = {}
+      const NTDObject = this.foundNTDMethodControlObj
+      Object.keys(NTDObject).forEach(function (key) {
+        Object.keys(NTDObject[key]).forEach(function (point) {
+          Object.keys(NTDObject[key][point]).forEach(function (typeDetail) {
+            const arrNTDOnTypeDetail = NTDObject[key][point][typeDetail]
+            if (!(typeDetail in obj)) obj[typeDetail] = {}
+            Object.keys(arrNTDOnTypeDetail).forEach(function (methodControl) {
+              // console.log(methodControl)
+              if (!(methodControl in obj[typeDetail])) obj[typeDetail][methodControl] = []
+              arrNTDOnTypeDetail[methodControl].forEach((ntd) => {
+                if (!obj[typeDetail][methodControl].includes(ntd)) obj[typeDetail][methodControl].push(ntd)
+              })
+            })
+          })
+        })
+      })
+      return obj
+    },
+
+    NTDWelding () {
+      let arr = []
+      const NTDObject = this.foundNTDWeldingObj
+      // console.log(NTDObject)
+      Object.keys(NTDObject).forEach(function (key) {
+        Object.keys(NTDObject[key]).forEach(function (point) {
+          Object.keys(NTDObject[key][point]).forEach(function (typeDetail) {
+            const arrNTDOnTypeDetail = NTDObject[key][point][typeDetail]
+            arrNTDOnTypeDetail.forEach((ntd) => {
+              if (!arr.includes(ntd)) arr.push(ntd)
+            })
+          })
+        })
+      })
+      arr = arr.sort(
         (a, b) => {
           const x = a.name.toLowerCase()
           const y = b.name.toLowerCase()
@@ -282,15 +453,58 @@ export default {
         })
       return arr
     },
+    // формирование объекта на сварку по ОТУ
+    NTDWeldingByOTU () {
+      const vm = this
+      const NTDObject = this.foundNTDWeldingObj
+      // Очень тупое копирование объекта
+      const obj = {}
+      Object.keys(NTDObject).forEach(function (key) {
+        Object.keys(NTDObject[key]).forEach(function (point) {
+          if (vm.otuItems[key] !== undefined) {
+            const OTUName = vm.otuItems[key].name + '(' + point + ')'
+            // Здесь необходима оптимизация кода (копирование объекта)
+            if (!(OTUName in obj)) obj[OTUName] = {}
+            Object.keys(NTDObject[key][point]).forEach(function (typeDetail) {
+              if (!(typeDetail in obj[OTUName])) obj[OTUName][typeDetail] = []
+              const arrNTDOnTypeDetail = NTDObject[key][point][typeDetail]
+              arrNTDOnTypeDetail.forEach((ntd) => {
+                obj[OTUName][typeDetail].push(ntd)
+              })
+            })
+          }
+        })
+      })
+      // console.log(obj)
+      return obj
+    },
+
+    // формирование объекта на сварку для копирования в карты
+    NTDWeldingObjToMap () {
+      const obj = {}
+      const NTDObject = this.foundNTDWeldingObj
+      Object.keys(NTDObject).forEach(function (key) {
+        Object.keys(NTDObject[key]).forEach(function (point) {
+          Object.keys(NTDObject[key][point]).forEach(function (typeDetail) {
+            const arrNTDOnTypeDetail = NTDObject[key][point][typeDetail]
+            if (!(typeDetail in obj)) obj[typeDetail] = []
+
+            arrNTDOnTypeDetail.forEach((ntd) => {
+              if (!obj[typeDetail].includes(ntd)) obj[typeDetail].push(ntd)
+            })
+          })
+        })
+      })
+      return obj
+    },
 
     NTDControlSting () {
       let arr = []
-      const vm = this.foundNTDMethodControlArr
-      Object.keys(vm).forEach(function (method) {
-        vm[method].forEach((ntd) => {
-          if (!arr.includes(ntd.name)) arr.push(ntd.name)
-        })
+      const vm = this.foundNTDMethodControlToCopy
+      vm.forEach(function (ntd) {
+        if (!arr.includes(ntd.name)) arr.push(ntd.name)
       })
+      //
       arr = arr.sort(
         (a, b) => {
           if (a < b) return -1
@@ -309,15 +523,13 @@ export default {
 
     reset () {
       this.foundNTDWeldingObj = {}
-      this.foundNTDWeldingArr = []
       this.foundNTDMethodControlObj = {}
-      this.foundNTDMethodControlArr = {}
-      // this.foundNTDMethodControlArr = {}
+      this.foundNTDMethodControlToCopy = []
     },
 
     pickUpDocs () {
-      const foundInOTU = {}
-      // const foundNTD = {}
+      const foundNTDWelding = {}
+      const foundNTDControl = {}
       this.reset()
 
       const selectedOtu = this.stringToObject(this.otuString)
@@ -330,10 +542,16 @@ export default {
 
         if (found) {
           found.forEach(indexOTU => { // key - НГДО, point - (4)
-            if (!(indexOTU.key in foundInOTU)) {
-              foundInOTU[indexOTU.key] = {}
+            // проверка наличия ключа
+            if (!(indexOTU.key in foundNTDWelding)) {
+              foundNTDWelding[indexOTU.key] = {}
+              foundNTDControl[indexOTU.key] = {}
             }
-            if (!(indexOTU.point in foundInOTU[indexOTU.key])) foundInOTU[indexOTU.key][indexOTU.point] = [] // проверка наличия ключа
+            // проверка наличия ключа
+            if (!(indexOTU.point in foundNTDWelding[indexOTU.key])) {
+              foundNTDWelding[indexOTU.key][indexOTU.point] = []
+              foundNTDControl[indexOTU.key][indexOTU.point] = []
+            }
 
             // поиск по способу сварки
             const methodWeldingComparison = this.methodWeldingComparison(this.selectedWeldingMethod, this.NTD_LIST[indexOtu].welding_method)
@@ -341,140 +559,41 @@ export default {
             if (methodWeldingComparison && gazpromEnabled) {
               // поиск по виду деталей
               const detailsTypeComparison = this.detailsTypeComparison(this.selectedDetailsType, this.NTD_LIST[indexOtu].details_type)
-              const fNTD = foundInOTU[indexOTU.key][indexOTU.point]
+              const fNTD = foundNTDWelding[indexOTU.key][indexOTU.point]
+
+              const fNTDControl = foundNTDControl[indexOTU.key][indexOTU.point]
 
               if (detailsTypeComparison) {
                 detailsTypeComparison.forEach((detailType) => { // detailType  - Т, Л, С
-                  if (!(detailType in fNTD)) fNTD[detailType] = [] // проверка наличия ключа
+                  // проверка наличия ключа
+                  if (!(detailType in fNTD)) {
+                    fNTD[detailType] = []
+                    fNTDControl[detailType] = {}
+                  }
+
+                  const weldingEnabled = this.weldingEnabled(this.NTD_LIST[indexOtu])
+                  // console.log('weldingEnabled - ', weldingEnabled)
+                  // добавляем документ в объект по наличию сварки
+                  if (weldingEnabled) fNTD[detailType].push(this.NTD_LIST[indexOtu])
 
                   const methodControlComparison = this.methodControlComparison(this.selectedMethodControl, this.NTD_LIST[indexOtu].control_method)
-                  console.log(methodControlComparison)
-
-                  fNTD[detailType].push(this.NTD_LIST[indexOtu])
+                  // перебор по методам контроля
+                  methodControlComparison.forEach((methodControl) => {
+                    // проверка наличия ключа
+                    if (!(methodControl in fNTDControl[detailType])) fNTDControl[detailType][methodControl] = []
+                    // добавляем документ в объект
+                    fNTDControl[detailType][methodControl].push(this.NTD_LIST[indexOtu])
+                    this.addNTDControlToArr(this.NTD_LIST[indexOtu])
+                  })
                 })
               }
             }
           })
         }
       }
-      this.foundNTDWelding(foundInOTU)
-      console.log(foundInOTU)
-    },
 
-    pickUpDocs__ () {
-      const foundInOTU = {}
-      const foundNTD = {}
-      this.reset()
-
-      const selectedOtu = this.stringToObject(this.otuString)
-
-      for (const indexOtu in this.NTD_LIST) {
-        const NTDOtu = this.stringToObject(this.NTD_LIST[indexOtu].otu)
-        const found = this.objectComparison(selectedOtu, NTDOtu)
-        // console.log(found)
-
-        // console.log('2- ', NTDOtu.stoGazprom)
-        const gazpromEnabled = this.gazpromEnabled(selectedOtu, NTDOtu)
-        // console.log(gazpromEnabled)
-
-        if (found) {
-          found.forEach(element => {
-            if (!(element.key in foundInOTU)) {
-              foundInOTU[element.key] = {}
-            }
-            if (!(element.point in foundInOTU[element.key])) {
-              foundInOTU[element.key][element.point] = []
-            }
-            const methodWeldingComparison = this.methodWeldingComparison(this.selectedWeldingMethod, this.NTD_LIST[indexOtu].welding_method)
-            // console.log(methodWeldingComparison)
-            const detailsTypeComparison = this.detailsTypeComparison(this.selectedDetailsType, this.NTD_LIST[indexOtu].details_type)
-            // console.log(detailsTypeComparison)
-
-            if (methodWeldingComparison && detailsTypeComparison && gazpromEnabled) {
-              if (!(element.key in foundNTD)) {
-                foundNTD[element.key] = {}
-              }
-              if (!(element.point in foundNTD[element.key])) {
-                foundNTD[element.key][element.point] = {}
-              }
-
-              const fNTD = foundNTD[element.key][element.point]
-              detailsTypeComparison.forEach((detailType) => {
-                if (!(detailType in fNTD)) {
-                  fNTD[detailType] = []
-                }
-                // fNTD[detailType].push(this.NTD_LIST[indexOtu])
-                this.test(this.NTD_LIST[indexOtu])
-              })
-
-              foundInOTU[element.key][element.point].push(this.NTD_LIST[indexOtu])
-            }
-          })
-        }
-      }
-      console.log(foundNTD)
-      // this.regulatoryDocsWelding = foundInOTU
-      this.foundNTDWelding(foundInOTU)
-      // this.foundNTDMethodControl(foundInOTU)
-      // this.foundNTDMethodControl2(foundNTD)
-    },
-
-    /*
-    // ВЫборка из НТД где есть выбранные методы контроля
-    foundNTDMethodControl (NTDObject) {
-      const vm = this
-      Object.keys(NTDObject).forEach(function (key) {
-        Object.keys(NTDObject[key]).forEach(function (point) {
-          if (vm.otuItems[key] !== undefined) {
-            const keyNTDWelding = vm.otuItems[key].name + '(' + point + ')'
-
-            vm.foundNTDMethodControlObj[keyNTDWelding] = {}
-            const ntdList = NTDObject[key][point]
-
-            ntdList.forEach((ntd) => {
-            // console.log(ntd)
-              const methods = vm.methodControl(ntd)
-
-              if (methods) {
-                methods.forEach((method) => {
-                  if (!(method in vm.foundNTDMethodControlObj[keyNTDWelding])) {
-                    vm.foundNTDMethodControlObj[keyNTDWelding][method] = []
-                  }
-                  if (!(method in vm.foundNTDMethodControlArr)) {
-                    vm.foundNTDMethodControlArr[method] = []
-                  }
-
-                  vm.foundNTDMethodControlObj[keyNTDWelding][method].push(ntd)
-
-                  if (!vm.foundNTDMethodControlArr[method].includes(ntd)) vm.foundNTDMethodControlArr[method].push(ntd)
-                })
-              // if (!vm.foundNTDMethodControlArr.includes(ntd)) vm.foundNTDMethodControlArr.push(ntd)
-              }
-            })
-          }
-        })
-      })
-    },
-*/
-
-    // формирование объекта и массива из НТД по сварке
-    foundNTDWelding (NTDObject) {
-      const vm = this
-      Object.keys(NTDObject).forEach(function (key) {
-        Object.keys(NTDObject[key]).forEach(function (point) {
-          if (vm.otuItems[key] !== undefined) {
-            const keyNTDWelding = vm.otuItems[key].name + '(' + point + ')'
-            vm.foundNTDWeldingObj[keyNTDWelding] = []
-            const ntdList = NTDObject[key][point]
-            ntdList.forEach((el) => {
-              if (el.weld_enabled) {
-                vm.foundNTDWeldingObj[keyNTDWelding].push(el)
-                if (!vm.foundNTDWeldingArr.includes(el)) vm.foundNTDWeldingArr.push(el)
-              }
-            })
-          }
-        })
-      })
+      this.foundNTDWeldingObj = foundNTDWelding
+      this.foundNTDMethodControlObj = foundNTDControl
     },
 
     // Преобразование строки ОТУ в объект
@@ -554,16 +673,12 @@ export default {
 
     // Сравнение по методы контроля
     methodControlComparison (selectedMethodControl, NTDMethodControlObj) {
-      // console.log(selectedMethodControl)
-      // console.log(NTDMethodControlObj)
       const result = []
-      // const controlMethod = OTU.control_method
       selectedMethodControl.forEach((method) => {
         NTDMethodControlObj.forEach((methodNTD) => {
           if (method.includes(methodNTD.name)) result.push(method)
         })
       })
-      // console.log(result)
       return result
     },
 
@@ -572,6 +687,17 @@ export default {
       // console.log(object2.stoGazprom, object2.stoGazprom)
       if (object1.stoGazprom[0] === object2.stoGazprom[0]) return true
       return false
+    },
+
+    // Проверка наличия описания сварки в документе
+    weldingEnabled (ntd) {
+      if (ntd.weld_enabled) return true
+      return false
+    },
+
+    // Формирование массива документов по контролю для копирования
+    addNTDControlToArr (ntd) {
+      if (!this.foundNTDMethodControlToCopy.includes(ntd)) this.foundNTDMethodControlToCopy.push(ntd)
     }
 
   },
@@ -606,6 +732,34 @@ body {
 
 .selector-welding-method {
   padding-top: 5px !important;
+}
+
+.table-fount-NTD {
+  border-collapse: collapse;
+    border: 1px solid grey;
+    width: 100%;
+}
+
+.table-fount-NTD >tbody>tr>td  {
+    border: 1px solid grey;
+}
+
+.table-fount-NTD-sub  > tbody > tr > td:nth-child(1){
+    width: 45px;
+    border: 1px solid grey;
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+ }
+
+.table-fount-NTD-row > tbody > tr:not(:first-child) > td {
+    border: 1px solid grey;
+    border-left: none;
+    border-bottom: none;
+ }
+
+.accordion-style {
+  background: #FFF7F7 !important;
 }
 
 </style>
