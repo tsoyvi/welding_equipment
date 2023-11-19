@@ -214,7 +214,7 @@
                 <h2 class="accordion-header" id="">
                     <button class="accordion-button accordion-style " type="button" data-bs-toggle="collapse"
                         data-bs-target="#NTDControlObj">
-                        <b>Нормативные документы на сварку для копирования в заявку (протокол):</b>
+                        <b>Нормативные документы на контроль для копирования в карты:</b>
                     </button>
                 </h2>
                 <div id="NTDControlObj" class="accordion-collapse collapse show">
@@ -273,7 +273,7 @@
                     <div class="col-1">V3</div>
                     <div class="col">ООО "НАКС-ПФО" Лаборатория контроля</div>
                     <div class="col">
-                       Дизайн Цой Вячеслав Игоревич
+                       Дизайн Ц
                     </div>
                     <div class="col-1">2023г.</div>
                 </div>
@@ -361,8 +361,8 @@ export default {
 
       regulatoryDocsWelding: '',
       selectedWeldingMethod: 'РД',
-      selectedDetailsType: ['Т', 'С'],
-      selectedMethodControl: ['ВИК', 'РК', 'УЗК', 'Растяжение'],
+      selectedDetailsType: ['Т'],
+      selectedMethodControl: ['ВИК', 'РК', 'УЗК'],
 
       detailsTypeList: { Т: 'Труба', Л: 'Лист', С: 'Стержень' },
       // otuString: 'НГДО(4), СК(2)',

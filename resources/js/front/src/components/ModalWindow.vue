@@ -5,8 +5,8 @@
       </button>
 -->
       <!-- Модальное окно -->
-      <div class="modal fade  modal-xl" id="modalWindow" tabindex="-1" aria-labelledby="ModalWindowLabel" aria-hidden="true">
-        <div class="modal-dialog">
+      <div class="modal fade" id="modalWindow" tabindex="-1" aria-labelledby="ModalWindowLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="exampleModalLabel">Заголовок модального окна</h1>
