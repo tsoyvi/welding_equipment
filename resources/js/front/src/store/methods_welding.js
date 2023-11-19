@@ -43,7 +43,7 @@ export default ({
       {
         name: 'ААДП',
         description: 'автоматическая аргонодуговая сварка плавящимся электродом',
-        enabled: false
+        enabled: true
       },
       {
         name: 'АФ',
