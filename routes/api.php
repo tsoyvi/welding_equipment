@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\NTDListController;
 use App\Http\Controllers\API\OtuListController;
+use App\Http\Controllers\RecordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +26,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/otu-list', OtuListController::class);
 Route::get('/settings/ntd_list', NTDListController::class);
+
+// Route::apiResource('receipt', ReceiptController::class); //
+
+
+Route::post('receipt', [RecordController::class, 'store']);
+
+// Route::post('request_list_sort', [RequestAttController::class, 'requestAttList']);

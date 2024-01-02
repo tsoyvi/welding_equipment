@@ -90,6 +90,8 @@
       ref="ModalWindow"
     >
       <component :is="currentContentWindow"></component>
+      <component :is="FormOrder"></component>
+
     </ModalWindow>
 
 </template>
@@ -100,6 +102,7 @@ import { markRaw } from 'vue'
 import PopupMenu from '../components/PopupMenu.vue'
 import ModalWindow from '../components/ModalWindow.vue'
 import FormOrganization from '../components/blocks/FormOrganization.vue'
+import FormOrder from '../components/blocks/FormOrder.vue'
 
 export default {
   name: 'MainTable',
@@ -112,7 +115,8 @@ export default {
 
   data: () => ({
     currentContentWindow: null,
-    FormOrganization: markRaw(FormOrganization)
+    FormOrganization: markRaw(FormOrganization),
+    FormOrder: markRaw(FormOrder)
   }),
 
   methods: {

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('receipt_id')->nullable()->constrained('receipts')->cascadeOnDelete();
+            $table->foreignId('record_id')->nullable()->constrained('records')->cascadeOnDelete();
             $table->date('date_receipt')->nullable()->comment('Дата поступления');
             $table->date('date_registration')->nullable()->comment('Дата регистрации');
             $table->string('note', 256)->nullable()->comment('Примечание');
