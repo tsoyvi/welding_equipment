@@ -12,14 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $this->call([
+            NTDListSeeder::class,
+            OtuListSeeder::class,
+        ]);
     }
 }
 
-
-// php artisan db:seed --class=OtuListSeeder
+// php artisan db:seed   // - полная загрузка
+// php artisan db:seed --class=OtuListSeeder  // загрузка конкретного сидера

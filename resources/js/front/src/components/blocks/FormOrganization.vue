@@ -95,7 +95,6 @@
     <button class="btn btn-primary" type="submit">Отправить форму</button>
   </div>
 
-{{organization}}
 </form>
 
 </template>
