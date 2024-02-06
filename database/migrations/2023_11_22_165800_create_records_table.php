@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('records', function (Blueprint $table) {
             $table->id();
             // $table->json('organization');
-            $table->string('name_organization', 50)->nullable()->comment('Название организации');
-            $table->string('address', 100)->nullable()->comment('адрес');
+            $table->string('applicant', 100)->nullable()->comment('Заявитель');
+            $table->string('name_organization', 100)->nullable()->comment('Название организации');
+            $table->string('address', 200)->nullable()->comment('адрес');
             $table->string('inn', 12)->nullable()->comment('ИНН');
             $table->string('name_contact', 50)->nullable()->comment('ФИО контактного лица');
             $table->string('phone', 50)->nullable()->comment('Телефон');
-            $table->string('email', 20)->nullable()->comment('email');
-            $table->string('website', 20)->nullable()->comment('сайт');
+            $table->string('email', 100)->nullable()->comment('email');
+            $table->string('website', 100)->nullable()->comment('сайт');
             $table->enum('organization_status', ['Потребитель', 'Производитель', 'Представитель производителя'])
                 ->default('Потребитель')->comment('Статус организации');
             $table->timestamps();

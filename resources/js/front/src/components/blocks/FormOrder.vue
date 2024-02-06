@@ -187,7 +187,6 @@ export default {
         ]
 
       },
-
       {
         index: 1,
         code_so: 'A3',
@@ -228,11 +227,11 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['METHODS_WELDING_LIST'])
+    ...mapGetters(['METHODS_WELDING_LIST', 'RECORD_SELECTED'])
   },
 
   methods: {
-    ...mapActions(['']),
+    ...mapActions(['ADD_EQUIPMENT_REQUEST']),
 
     factory_numbers (so) {
       let strNumbers = ''
@@ -245,6 +244,16 @@ export default {
 
     selectIndex (index) {
       this.selected_index = index
+    },
+
+    async update () {
+      const data = { order_id: this.RECORD_SELECTED.id, data: this.order }
+      const result = await this.ADD_EQUIPMENT_REQUEST(data)
+      if (result) {
+        // this.GET_USER_PROFILE()
+        console.log('ok')
+      }
+      this.loading = false
     }
 
   }

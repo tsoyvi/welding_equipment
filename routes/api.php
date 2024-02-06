@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\NTDListController;
 use App\Http\Controllers\API\OtuListController;
-use App\Http\Controllers\RecordController;
+use App\Http\Controllers\API\RecordController;
+use App\Http\Controllers\API\EquipmentListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +30,10 @@ Route::get('/settings/ntd_list', NTDListController::class);
 
 // Route::apiResource('receipt', ReceiptController::class); //
 
-
+Route::get('records', [RecordController::class, 'index']);
 Route::post('receipt', [RecordController::class, 'store']);
+Route::post('record-update', [RecordController::class, 'update']);
+
+Route::post('equipment', [EquipmentListController ::class, 'store']);
 
 // Route::post('request_list_sort', [RequestAttController::class, 'requestAttList']);

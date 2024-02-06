@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Record;
+namespace App\Http\Requests\EquipmentList;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,15 +24,16 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'applicant' => [''],
-            'name_organization' => [''],
-            'address' => [''],
-            'inn' => [''],
-            'name_contact' => [''],
-            'phone' => [''],
-            'email' => [''],
-            'website' => [''],
-            'organization_status' => ['']
+            'order_id' => [''],
+            'code_so' => [''],
+            'welding_method' => [''],
+            'otu' => [''],
+            'type_att' => [''],
+            'manufacturer' => [''],
+            'model' => [''],
+            'responsible' => [''],
+            'cert' => [''],
+            'so' => [''],
         ];
     }
 

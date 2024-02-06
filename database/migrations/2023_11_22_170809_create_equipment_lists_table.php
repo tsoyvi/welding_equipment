@@ -13,17 +13,18 @@ return new class extends Migration
     {
         Schema::create('equipment_lists', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->nullable()->constrained('orders')->cascadeOnDelete();
-            $table->string('type', 10)->nullable()->comment('вид оборудования');
-            $table->string('model', 50)->nullable()->comment('марка оборудования');
-            $table->string('number', 100)->nullable()->comment('зав номер');
-            $table->string('date_production', 15)->nullable()->comment('дата изготовления');
-            $table->string('date_start_exp', 15)->nullable()->comment('дата начала эксплуатации');
-            $table->enum('type_att', ['Первичная', 'Периодическая', 'Дополнительная'])
-                ->default('Первичная')->comment('Вид аттестации');
-            $table->string('cert_attestation', 50)->nullable()->comment('Свидетельство аттестации');    
+            $table->foreignId('order_id')->constrained('records')->cascadeOnDelete();
+            $table->string('code_so', 10)->nullable()->comment('вид оборудования');
             $table->string('welding_method', 50)->nullable()->comment('способ сварки');
             $table->string('otu', 150)->nullable()->comment('ОТУ');
+            $table->enum('type_att', ['Первичная', 'Периодическая', 'Дополнительная'])
+                ->default('Первичная')->comment('Вид аттестации');
+            $table->string('manufacturer', 100)->nullable()->comment('Производитель'); 
+            $table->string('model', 100)->nullable()->comment('марка оборудования');
+            $table->string('responsible', 100)->nullable()->comment('ответственный');
+            $table->string('cert', 20)->nullable()->comment('сертификат');  
+            $table->json('so')->nullable()->comment('данные об оборудовании');
+
             $table->timestamps();
         });
     }

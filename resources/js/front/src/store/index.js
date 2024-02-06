@@ -6,6 +6,7 @@ import otuSelect from './otu_select'
 import ntdList from './ntd_list'
 import methodsWelding from './methods_welding'
 import record from './record'
+import equipment from './equipment'
 
 export default createStore({
   state: {
@@ -22,6 +23,7 @@ export default createStore({
     otuSelect,
     ntdList,
     methodsWelding,
-    record
+    record,
+    equipment
   }
 })

@@ -11,6 +11,7 @@ class Record extends Model
 
     protected $fillable  = [
         'id',
+        'applicant',
         'name_organization',
         'address',
         'inn',

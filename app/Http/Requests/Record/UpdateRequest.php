@@ -4,7 +4,7 @@ namespace App\Http\Requests\Record;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +24,7 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => [''],
             'applicant' => [''],
             'name_organization' => [''],
             'address' => [''],
@@ -40,13 +41,6 @@ class CreateRequest extends FormRequest
     {
         return [
             'required' => 'Заполните поле :attribute'
-        ];
-    }
-
-    public function attributes()
-    {
-        return [
-            //'cert_number' => 'Номер сертификата',
         ];
     }
 }

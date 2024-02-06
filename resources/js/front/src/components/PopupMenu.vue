@@ -10,7 +10,7 @@
         class="dropdown-item button_test"
         data-bs-toggle="modal"
         data-bs-target="#modalWindow"
-        @click="openWindow()"
+        @click="openWindow(id)"
         >{{item.title}}
       </div>
       <div v-else><li><hr class="dropdown-divider"></li></div>
@@ -25,7 +25,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  props: ['openWindow'],
+  props: ['openWindow', 'id'],
   data: function () {
     return {
     }
