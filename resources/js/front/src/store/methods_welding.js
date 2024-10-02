@@ -172,6 +172,11 @@ export default ({
         name: 'Э',
         description: 'экструзионная сварка',
         enabled: false
+      },
+      {
+        name: 'Т',
+        description: 'Термитная сварка',
+        enabled: true
       }
 
     ]
