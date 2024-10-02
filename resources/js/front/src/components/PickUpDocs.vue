@@ -273,7 +273,11 @@
                     <div class="col-1">V3</div>
                     <div class="col">ООО "НАКС-ПФО" Лаборатория контроля</div>
                     <div class="col">
+<<<<<<< HEAD
 
+=======
+                       Дизайн Ц
+>>>>>>> b3469c0db335b205c574d980c9bb345ffec92476
                     </div>
                     <div class="col-1">2023г.</div>
                 </div>
